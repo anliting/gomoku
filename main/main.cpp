@@ -1,5 +1,16 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<string>
+#include<vector>
 using namespace std;
+struct PatternElement{
+    char x,y,state;
+};
+vector<vector<vector<PatternElement>>>pattern{{
+    {{0,0,1},{0,1,1},{0,2,1},{0,3,1},{0,0,1}},
+    {{0,0,1},{1,0,1},{2,0,1},{3,0,1},{4,0,1}},
+    {{0,0,1},{1,1,1},{2,2,1},{3,3,1},{4,4,1}},
+    {{0,4,1},{1,3,1},{2,2,1},{3,1,1},{4,0,1}},
+}};
 struct Score{
     float black,draw,white;
 };
@@ -18,16 +29,18 @@ struct Board{
     template<int n>bool win(){
         for(int i=0;i<15;i++)
         for(int j=0;j<15;j++){
-            bool b=i+4<15,c=j+4<15,d=i+4<15&&j+4<15;
+            bool b=i+4<15,c=j+4<15,d=i+4<15&&j+4<15,e=d;
             for(int k=0;k<5;k++){
-                if(i+k<15&&a[i+k][j]!=n)
+                if(b&&a[i+k][j]!=n)
                     b=0;
-                if(j+k<15&&a[i][j+k]!=n)
+                if(c&&a[i][j+k]!=n)
                     c=0;
-                if(i+k<15&&j+k<15&&a[i+k][j+k]!=n)
+                if(d&&a[i+k][j+k]!=n)
                     d=0;
+                if(e&&a[i+k][j+(4-k)]!=n)
+                    e=0;
             }
-            if(b||c||d)
+            if(b||c||d||e)
                 return 1;
         }
         return 0;
