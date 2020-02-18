@@ -6,7 +6,7 @@ struct PatternElement{
     char x,y,state;
 };
 vector<vector<vector<PatternElement>>>pattern{{
-    {{0,0,1},{0,1,1},{0,2,1},{0,3,1},{0,0,1}},
+    {{0,0,1},{0,1,1},{0,2,1},{0,3,1},{0,4,1}},
     {{0,0,1},{1,0,1},{2,0,1},{3,0,1},{4,0,1}},
     {{0,0,1},{1,1,1},{2,2,1},{3,3,1},{4,4,1}},
     {{0,4,1},{1,3,1},{2,2,1},{3,1,1},{4,0,1}},
@@ -120,9 +120,61 @@ Score Board::score(int t=1024){
     s.white/=t;
     return s;
 }
+void patternDeduct(int n){
+    pattern.push_back({});
+    if(n%2){
+        for(int i=0;i<pattern[n-1].size();i++)
+        for(int j=0;j<pattern[n-1][i].size();j++)
+        if(pattern[n-1][i][j].state){
+            vector<PatternElement>a(pattern[n-1][i]);
+            a[j].state=0;
+            pattern[n].push_back(a);
+        }
+    }else{
+    }
+}
+void visualOutputPattern(ostream&s,vector<PatternElement>&p){
+    static string sa[]={" ","┼","●"};
+    char xm=0,ym=0;
+    for(int i=0;i<p.size();i++){
+        xm=max(xm,p[i].x);
+        ym=max(ym,p[i].y);
+    }
+    xm++;
+    ym++;
+    vector<vector<char>>a(xm,vector<char>(ym,0));
+    for(auto e:p)
+        a[e.x][e.y]=e.state+1;
+    s<<"┌";
+    for(int i=0;i<ym;i++)
+        s<<"─";
+    s<<"┐\n";
+    for(int i=0;i<xm;i++){
+        s<<"│";
+        for(int j=0;j<ym;j++)
+            s<<sa[a[i][j]];
+        s<<"│\n";
+    }
+    s<<"└";
+    for(int i=0;i<ym;i++)
+        s<<"─";
+    s<<"┘\n";
+}
+void syntaxOutputPattern(ostream&s,vector<PatternElement>&p){
+    for(int j=0;j<p.size();j++)
+        s<<'{'
+            <<(int)p[j].x<<','
+            <<(int)p[j].y<<','
+            <<(int)p[j].state<<"},"
+        ;
+    s<<'\n';
+}
 int main(){
-    srand(time(0));
+    patternDeduct(1);
+    for(int i=0;i<pattern[1].size();i++)
+        visualOutputPattern(cout,pattern[1][i]);
+    /*srand(time(0));
     Board b;
     cin>>b;
-    cout<<b.score();
+    cout<<b.score();*/
 }
