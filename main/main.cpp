@@ -6,6 +6,12 @@
 using namespace std;
 struct PatternElement{
     char x,y,state;
+    bool operator<(PatternElement&pe){
+        return make_tuple(x,y,state)<make_tuple(pe.x,pe.y,pe.state);
+    }
+    bool operator==(PatternElement&pe){
+        return x==pe.x&&y==pe.y&&state==pe.state;
+    }
 };
 typedef vector<PatternElement>Pattern;
 typedef vector<Pattern>PatternLevel;
@@ -158,6 +164,7 @@ void patternDeduct(int n){
                 (p[i-1].state&&p[i-1].state?good:bad)=1;
             if(bad||!good)
                 continue;
+            p.resize(unique(p.begin(),p.end())-p.begin());
             char xm=CHAR_MAX,ym=CHAR_MAX;
             for(auto&pe:p){
                 xm=min(xm,pe.x);
@@ -170,6 +177,24 @@ void patternDeduct(int n){
             level.push_back(p);
         }
     }
+    sort(level.begin(),level.end(),[](Pattern&a,Pattern&b)->bool{
+        if(a.size()!=b.size())
+            return a.size()<b.size();
+        for(int i=0;i<a.size();i++)
+        if(!(a[i]==b[i]))
+            return a[i]<b[i];
+        return 0;
+    });
+    level.resize(unique(
+        level.begin(),level.end(),[](Pattern&a,Pattern&b)->bool{
+            if(a.size()!=b.size())
+                return 0;
+            for(int i=0;i<a.size();i++)
+            if(!(a[i]==b[i]))
+                return 0;
+            return 1;
+        }
+    )-level.begin());
     pattern.push_back(level);
 }
 void visualOutputPattern(ostream&s,vector<PatternElement>&p){
@@ -214,7 +239,6 @@ int main(){
     cout<<pattern[2].size()<<endl;
     for(int i=0;i<pattern[2].size();i++)
         visualOutputPattern(cout,pattern[2][i]);
-    return 0;
     /*srand(time(0));
     Board b;
     cin>>b;
