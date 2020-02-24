@@ -1,21 +1,11 @@
 #include<climits>
+#include<algorithm>
 #include<iostream>
 #include<string>
 #include<vector>
-#include<algorithm>
+#include"Pattern.cpp"
 using namespace std;
-struct PatternElement{
-    char x,y,state;
-    bool operator<(PatternElement&pe){
-        return make_tuple(x,y,state)<make_tuple(pe.x,pe.y,pe.state);
-    }
-    bool operator==(PatternElement&pe){
-        return x==pe.x&&y==pe.y&&state==pe.state;
-    }
-};
-typedef vector<PatternElement>Pattern;
-typedef vector<Pattern>PatternLevel;
-vector<PatternLevel>pattern{{
+vector<PatternNS::PatternLevel>pattern{{
     {{0,0,1},{0,1,1},{0,2,1},{0,3,1},{0,4,1}},
     {{0,0,1},{1,0,1},{2,0,1},{3,0,1},{4,0,1}},
     {{0,0,1},{1,1,1},{2,2,1},{3,3,1},{4,4,1}},
@@ -131,12 +121,12 @@ Score Board::score(int t=1024){
     return s;
 }
 void patternDeduct(int n){
-    PatternLevel level;
+    PatternNS::PatternLevel level;
     if(n%2){
         for(int i=0;i<pattern[n-1].size();i++)
         for(int j=0;j<pattern[n-1][i].size();j++)
         if(pattern[n-1][i][j].state){
-            Pattern p(pattern[n-1][i]);
+            PatternNS::Pattern p(pattern[n-1][i]);
             p[j].state=0;
             level.push_back(p);
         }
@@ -144,13 +134,13 @@ void patternDeduct(int n){
         int m=pattern.size()/2;
         for(int al=0;al<m;al++)
         for(auto&ap:pattern[al*2+1])
-        for(int bl=0;bl<m;bl++)
+        for(int bl=al;bl<m;bl++)
         for(auto&bp:pattern[bl*2+1])
         for(auto&ape:ap)
         if(ape.state)
         for(auto&bpe:bp)
         if(bpe.state){
-            Pattern p=ap;
+            PatternNS::Pattern p=ap;
             char dx=bpe.x-ape.x,dy=bpe.y-ape.y;
             for(auto&pe:bp)
                 p.push_back({char(pe.x-dx),char(pe.y-dy),pe.state});
@@ -158,11 +148,15 @@ void patternDeduct(int n){
                 return make_tuple(a.x,a.y,a.state)<
                     make_tuple(b.x,b.y,b.state);
             });
-            bool bad=0,good=0;
+            bool bad=0;
             for(int i=1;i<p.size();i++)
-            if(p[i-1].x==p[i].x&&p[i-1].y==p[i].y)
-                (p[i-1].state&&p[i-1].state?good:bad)=1;
-            if(bad||!good)
+            if(
+                p[i-1].x==p[i].x&&
+                p[i-1].y==p[i].y&&
+                !(p[i-1].state&&p[i-1].state)
+            )
+                bad=1;
+            if(bad)
                 continue;
             p.resize(unique(p.begin(),p.end())-p.begin());
             char xm=CHAR_MAX,ym=CHAR_MAX;
@@ -177,7 +171,9 @@ void patternDeduct(int n){
             level.push_back(p);
         }
     }
-    sort(level.begin(),level.end(),[](Pattern&a,Pattern&b)->bool{
+    sort(level.begin(),level.end(),[](
+        PatternNS::Pattern&a,PatternNS::Pattern&b
+    )->bool{
         if(a.size()!=b.size())
             return a.size()<b.size();
         for(int i=0;i<a.size();i++)
@@ -186,7 +182,9 @@ void patternDeduct(int n){
         return 0;
     });
     level.resize(unique(
-        level.begin(),level.end(),[](Pattern&a,Pattern&b)->bool{
+        level.begin(),level.end(),[](
+            PatternNS::Pattern&a,PatternNS::Pattern&b
+        )->bool{
             if(a.size()!=b.size())
                 return 0;
             for(int i=0;i<a.size();i++)
@@ -197,7 +195,7 @@ void patternDeduct(int n){
     )-level.begin());
     pattern.push_back(level);
 }
-void visualOutputPattern(ostream&s,vector<PatternElement>&p){
+void visualOutputPattern(ostream&s,PatternNS::Pattern&p){
     static string sa[]={" ","┼","●"};
     char xm=0,ym=0;
     for(int i=0;i<p.size();i++){
@@ -224,7 +222,7 @@ void visualOutputPattern(ostream&s,vector<PatternElement>&p){
         s<<"─";
     s<<"┘\n";
 }
-void syntaxOutputPattern(ostream&s,vector<PatternElement>&p){
+void syntaxOutputPattern(ostream&s,PatternNS::Pattern&p){
     for(int j=0;j<p.size();j++)
         s<<'{'
             <<(int)p[j].x<<','
@@ -237,8 +235,8 @@ int main(){
     patternDeduct(1);
     patternDeduct(2);
     cout<<pattern[2].size()<<endl;
-    for(int i=0;i<pattern[2].size();i++)
-        visualOutputPattern(cout,pattern[2][i]);
+    /*for(int i=0;i<pattern[2].size();i++)
+        visualOutputPattern(cout,pattern[2][i]);*/
     /*srand(time(0));
     Board b;
     cin>>b;
