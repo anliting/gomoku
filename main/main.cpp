@@ -3,14 +3,8 @@
 #include<iostream>
 #include<string>
 #include<vector>
-#include"Pattern.cpp"
+#include"main/pattern.cpp"
 using namespace std;
-vector<PatternNS::PatternLevel>pattern{{
-    {{0,0,1},{0,1,1},{0,2,1},{0,3,1},{0,4,1}},
-    {{0,0,1},{1,0,1},{2,0,1},{3,0,1},{4,0,1}},
-    {{0,0,1},{1,1,1},{2,2,1},{3,3,1},{4,4,1}},
-    {{0,4,1},{1,3,1},{2,2,1},{3,1,1},{4,0,1}},
-}};
 struct Score{
     float black,draw,white;
 };
@@ -120,82 +114,7 @@ Score Board::score(int t=1024){
     s.white/=t;
     return s;
 }
-void patternDeduct(int n){
-    PatternNS::PatternLevel level;
-    if(n%2){
-        for(int i=0;i<pattern[n-1].size();i++)
-        for(int j=0;j<pattern[n-1][i].size();j++)
-        if(pattern[n-1][i][j].state){
-            PatternNS::Pattern p(pattern[n-1][i]);
-            p[j].state=0;
-            level.push_back(p);
-        }
-    }else{
-        int m=pattern.size()/2;
-        for(int al=0;al<m;al++)
-        for(auto&ap:pattern[al*2+1])
-        for(int bl=al;bl<m;bl++)
-        for(auto&bp:pattern[bl*2+1])
-        for(auto&ape:ap)
-        if(ape.state)
-        for(auto&bpe:bp)
-        if(bpe.state){
-            PatternNS::Pattern p=ap;
-            char dx=bpe.x-ape.x,dy=bpe.y-ape.y;
-            for(auto&pe:bp)
-                p.push_back({char(pe.x-dx),char(pe.y-dy),pe.state});
-            sort(p.begin(),p.end(),[](auto&a,auto&b){
-                return make_tuple(a.x,a.y,a.state)<
-                    make_tuple(b.x,b.y,b.state);
-            });
-            bool bad=0;
-            for(int i=1;i<p.size();i++)
-            if(
-                p[i-1].x==p[i].x&&
-                p[i-1].y==p[i].y&&
-                !(p[i-1].state&&p[i-1].state)
-            )
-                bad=1;
-            if(bad)
-                continue;
-            p.resize(unique(p.begin(),p.end())-p.begin());
-            char xm=CHAR_MAX,ym=CHAR_MAX;
-            for(auto&pe:p){
-                xm=min(xm,pe.x);
-                ym=min(ym,pe.y);
-            }
-            for(auto&pe:p){
-                pe.x-=xm;
-                pe.y-=ym;
-            }
-            level.push_back(p);
-        }
-    }
-    sort(level.begin(),level.end(),[](
-        PatternNS::Pattern&a,PatternNS::Pattern&b
-    )->bool{
-        if(a.size()!=b.size())
-            return a.size()<b.size();
-        for(int i=0;i<a.size();i++)
-        if(!(a[i]==b[i]))
-            return a[i]<b[i];
-        return 0;
-    });
-    level.resize(unique(
-        level.begin(),level.end(),[](
-            PatternNS::Pattern&a,PatternNS::Pattern&b
-        )->bool{
-            if(a.size()!=b.size())
-                return 0;
-            for(int i=0;i<a.size();i++)
-            if(!(a[i]==b[i]))
-                return 0;
-            return 1;
-        }
-    )-level.begin());
-    pattern.push_back(level);
-}
-void visualOutputPattern(ostream&s,PatternNS::Pattern&p){
+void visualOutputPattern(ostream&s,pattern::Pattern&p){
     static string sa[]={" ","┼","●"};
     char xm=0,ym=0;
     for(int i=0;i<p.size();i++){
@@ -222,7 +141,7 @@ void visualOutputPattern(ostream&s,PatternNS::Pattern&p){
         s<<"─";
     s<<"┘\n";
 }
-void syntaxOutputPattern(ostream&s,PatternNS::Pattern&p){
+void syntaxOutputPattern(ostream&s,pattern::Pattern&p){
     for(int j=0;j<p.size();j++)
         s<<'{'
             <<(int)p[j].x<<','
@@ -232,11 +151,11 @@ void syntaxOutputPattern(ostream&s,PatternNS::Pattern&p){
     s<<'\n';
 }
 int main(){
-    patternDeduct(1);
-    patternDeduct(2);
-    cout<<pattern[2].size()<<endl;
-    /*for(int i=0;i<pattern[2].size();i++)
-        visualOutputPattern(cout,pattern[2][i]);*/
+    pattern::patternDeduct(1);
+    pattern::patternDeduct(2);
+    cout<<pattern::pattern[2].size()<<endl;
+    /*for(int i=0;i<pattern::pattern[2].size();i++)
+        visualOutputPattern(cout,pattern::pattern[2][i]);*/
     /*srand(time(0));
     Board b;
     cin>>b;
