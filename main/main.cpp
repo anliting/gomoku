@@ -154,8 +154,8 @@ int main(){
     pattern::patternDeduct(1);
     pattern::patternDeduct(2);
     cout<<pattern::pattern[2].size()<<endl;
-    /*for(int i=0;i<pattern::pattern[2].size();i++)
-        visualOutputPattern(cout,pattern::pattern[2][i]);*/
+    for(int i=0;i<pattern::pattern[2].size();i++)
+        visualOutputPattern(cout,pattern::pattern[2][i]);
     /*srand(time(0));
     Board b;
     cin>>b;
