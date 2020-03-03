@@ -46,16 +46,22 @@ namespace pattern{
 }
 void pattern::patternDeduct(int n){
     PatternLevel level;
+    int m=pattern.size()/2;
     if(n%2){
         for(int i=0;i<pattern[n-1].size();i++)
         for(int j=0;j<pattern[n-1][i].size();j++)
         if(pattern[n-1][i][j].state){
             Pattern p(pattern[n-1][i]);
             p[j].state=0;
+            bool bad=0;
+            for(int l=0;l<m;l++)for(auto&q:pattern[l*2+1])
+                if(pattern::in(q,p))
+                    bad=1;
+            if(bad)
+                continue;
             level.push_back(p);
         }
     }else{
-        int m=pattern.size()/2;
         for(int al=0;al<m;al++)for(auto&ap:pattern[al*2+1])
         for(int bl=0;bl<m;bl++)for(auto&bp:pattern[bl*2+1])
         for(auto&ape:ap)if(ape.state)

@@ -153,9 +153,10 @@ void syntaxOutputPattern(ostream&s,pattern::Pattern&p){
 int main(){
     pattern::patternDeduct(1);
     pattern::patternDeduct(2);
-    cout<<pattern::pattern[2].size()<<endl;
-    for(int i=0;i<pattern::pattern[2].size();i++)
-        visualOutputPattern(cout,pattern::pattern[2][i]);
+    pattern::patternDeduct(3);
+    cout<<pattern::pattern[3].size()<<endl;
+    for(auto&p:pattern::pattern[3])
+        visualOutputPattern(cout,p);
     /*srand(time(0));
     Board b;
     cin>>b;
