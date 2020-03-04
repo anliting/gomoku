@@ -43,6 +43,33 @@ namespace pattern{
         for(auto&pe:p)
             b[pe.x][pe.y]=pe.state+1;
     }
+    void visualOutput(ostream&s,pattern::Pattern&p){
+        static string sa[]={" ","┼","●"};
+        char xm=0,ym=0;
+        for(int i=0;i<p.size();i++){
+            xm=max(xm,p[i].x);
+            ym=max(ym,p[i].y);
+        }
+        xm++;
+        ym++;
+        vector<vector<char>>a(xm,vector<char>(ym,0));
+        for(auto e:p)
+            a[e.x][e.y]=e.state+1;
+        s<<"┌";
+        for(int i=0;i<ym;i++)
+            s<<"─";
+        s<<"┐\n";
+        for(int i=0;i<xm;i++){
+            s<<"│";
+            for(int j=0;j<ym;j++)
+                s<<sa[a[i][j]];
+            s<<"│\n";
+        }
+        s<<"└";
+        for(int i=0;i<ym;i++)
+            s<<"─";
+        s<<"┘\n";
+    }
 }
 void pattern::patternDeduct(int n){
     PatternLevel level;
@@ -63,43 +90,54 @@ void pattern::patternDeduct(int n){
         }
     }else{
         for(int al=0;al<m;al++)for(auto&ap:pattern[al*2+1])
-        for(int bl=0;bl<m;bl++)for(auto&bp:pattern[bl*2+1])
-        for(auto&ape:ap)if(ape.state)
-        for(auto&bpe:bp)if(bpe.state){
-            Pattern p=ap;
-            char dx=bpe.x-ape.x,dy=bpe.y-ape.y;
-            for(auto&pe:bp)
-                p.push_back({char(pe.x-dx),char(pe.y-dy),pe.state});
-            sort(p.begin(),p.end(),[](auto&a,auto&b){
-                return make_tuple(a.x,a.y,a.state)<
-                    make_tuple(b.x,b.y,b.state);
-            });
-            bool bad=0;
-            for(int i=1;i<p.size();i++)
-            if(
-                p[i-1].x==p[i].x&&
-                p[i-1].y==p[i].y&&
-                !(p[i-1].state&&p[i-1].state)
-            )
-                bad=1;
-            if(bad)
-                continue;
-            p.resize(unique(p.begin(),p.end())-p.begin());
-            char xm=CHAR_MAX,ym=CHAR_MAX;
-            for(auto&pe:p){
-                xm=min(xm,pe.x);
-                ym=min(ym,pe.y);
-            }
-            for(auto&pe:p){
-                pe.x-=xm;
-                pe.y-=ym;
-            }
-            for(int cl=0;cl<m;cl++)for(auto&cp:pattern[cl*2])
-                if(pattern::in(cp,p))
+        for(int bl=0;bl<m;bl++)for(auto&bp:pattern[bl*2+1]){
+            for(auto&ape:ap)if(ape.state)
+            for(auto&bpe:bp)if(bpe.state){
+                Pattern p=ap;
+                char dx=bpe.x-ape.x,dy=bpe.y-ape.y;
+                for(auto&pe:bp)
+                    p.push_back({char(pe.x-dx),char(pe.y-dy),pe.state});
+                sort(p.begin(),p.end(),[](auto&a,auto&b){
+                    return make_tuple(a.x,a.y,a.state)<
+                        make_tuple(b.x,b.y,b.state);
+                });
+                bool bad=0;
+                for(int i=1;i<p.size();i++)
+                if(
+                    p[i-1].x==p[i].x&&
+                    p[i-1].y==p[i].y&&
+                    !(p[i-1].state&&p[i-1].state)
+                )
                     bad=1;
-            if(bad)
-                continue;
-            level.push_back(p);
+                if(bad)
+                    continue;
+                p.resize(unique(p.begin(),p.end())-p.begin());
+                char xm=CHAR_MAX,ym=CHAR_MAX,xMax=CHAR_MIN,yMax=CHAR_MIN;
+                for(auto&pe:p){
+                    xm=min(xm,pe.x);
+                    ym=min(ym,pe.y);
+                    xMax=max(xMax,pe.y);
+                    yMax=max(yMax,pe.y);
+                }
+                if(!(xMax+1-xm<15&&yMax+1-ym<15))
+                    continue;
+                for(auto&pe:p){
+                    pe.x-=xm;
+                    pe.y-=ym;
+                }
+                for(int cl=0;cl<m;cl++)for(auto&cp:pattern[cl*2])
+                    if(pattern::in(cp,p))
+                        bad=1;
+                if(bad)
+                    continue;
+                level.push_back(p);
+                pattern::visualOutput(cout,p);
+                cout<<"level="<<n<<";"<<(
+                    &ap-&pattern[al*2+1][0]
+                )<<'/'<<pattern[al*2+1].size()<<';'<<(
+                    &bp-&pattern[bl*2+1][0]
+                )<<'/'<<pattern[bl*2+1].size()<<'\n';
+            }
         }
     }
     sort(level.begin(),level.end(),[](
@@ -124,6 +162,15 @@ void pattern::patternDeduct(int n){
             return 1;
         }
     )-level.begin());
-    pattern.push_back(level);
+    PatternLevel l;
+    for(auto&p:level){
+        bool a=0;
+        for(auto&pa:level)
+            if(&pa!=&p&&pattern::in(pa,p))
+                a=1;
+        if(!a)
+            l.push_back(p);
+    }
+    pattern.push_back(l);
 }
 #endif

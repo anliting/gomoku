@@ -114,33 +114,6 @@ Score Board::score(int t=1024){
     s.white/=t;
     return s;
 }
-void visualOutputPattern(ostream&s,pattern::Pattern&p){
-    static string sa[]={" ","┼","●"};
-    char xm=0,ym=0;
-    for(int i=0;i<p.size();i++){
-        xm=max(xm,p[i].x);
-        ym=max(ym,p[i].y);
-    }
-    xm++;
-    ym++;
-    vector<vector<char>>a(xm,vector<char>(ym,0));
-    for(auto e:p)
-        a[e.x][e.y]=e.state+1;
-    s<<"┌";
-    for(int i=0;i<ym;i++)
-        s<<"─";
-    s<<"┐\n";
-    for(int i=0;i<xm;i++){
-        s<<"│";
-        for(int j=0;j<ym;j++)
-            s<<sa[a[i][j]];
-        s<<"│\n";
-    }
-    s<<"└";
-    for(int i=0;i<ym;i++)
-        s<<"─";
-    s<<"┘\n";
-}
 void syntaxOutputPattern(ostream&s,pattern::Pattern&p){
     for(int j=0;j<p.size();j++)
         s<<'{'
@@ -154,9 +127,10 @@ int main(){
     pattern::patternDeduct(1);
     pattern::patternDeduct(2);
     pattern::patternDeduct(3);
-    cout<<pattern::pattern[3].size()<<endl;
-    for(auto&p:pattern::pattern[3])
-        visualOutputPattern(cout,p);
+    pattern::patternDeduct(4);
+    cout<<pattern::pattern[4].size()<<endl;
+    for(auto&p:pattern::pattern[4])
+        pattern::visualOutput(cout,p);
     /*srand(time(0));
     Board b;
     cin>>b;
