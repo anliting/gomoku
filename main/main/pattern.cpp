@@ -131,12 +131,12 @@ void pattern::patternDeduct(int n){
                 if(bad)
                     continue;
                 level.push_back(p);
-                pattern::visualOutput(cout,p);
+                /*pattern::visualOutput(cout,p);
                 cout<<"level="<<n<<";"<<(
                     &ap-&pattern[al*2+1][0]
                 )<<'/'<<pattern[al*2+1].size()<<';'<<(
                     &bp-&pattern[bl*2+1][0]
-                )<<'/'<<pattern[bl*2+1].size()<<'\n';
+                )<<'/'<<pattern[bl*2+1].size()<<'\n';*/
             }
         }
     }

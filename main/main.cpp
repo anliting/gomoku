@@ -14,10 +14,10 @@ struct Board{
     int calcState(){
         if(win<1>())
             return 1;
-        if(draw())
-            return 2;
         if(win<2>())
             return 3;
+        if(draw())
+            return 2;
         return 0;
     }
     template<int n>bool win(){
@@ -124,15 +124,16 @@ void syntaxOutputPattern(ostream&s,pattern::Pattern&p){
     s<<'\n';
 }
 int main(){
+    /*cout<<"calculating pattern\n";
     pattern::patternDeduct(1);
     pattern::patternDeduct(2);
     pattern::patternDeduct(3);
-    pattern::patternDeduct(4);
-    cout<<pattern::pattern[4].size()<<endl;
-    for(auto&p:pattern::pattern[4])
-        pattern::visualOutput(cout,p);
-    /*srand(time(0));
+    cout<<"compeleted calculating pattern\n";*/
+    /*cout<<pattern::pattern[3].size()<<endl;
+    for(auto&p:pattern::pattern[3])
+        pattern::visualOutput(cout,p);*/
+    srand(time(0));
     Board b;
     cin>>b;
-    cout<<b.score();*/
+    cout<<b.score();
 }
