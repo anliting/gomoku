@@ -1,2 +1,1 @@
-./gomoku/main/make
-./a.out <gomoku/main/testdata/1
+./a.out <gomoku/main/testdata/3-3

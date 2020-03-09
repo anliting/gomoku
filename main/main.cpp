@@ -12,39 +12,48 @@ struct Board{
     char a[15][15];
     Score score(int t);
     int calcState(){
-        if(win<1>())
+        int c[2]{};
+        for(int i=0;i<15;i++)
+        for(int j=0;j<15;j++)
+        if(a[i][j])
+            c[a[i][j]-1]++;
+        bool blackFirst=c[0]==c[1];
+        int blackStep=225,whiteStep=225;
+        if(blackFirst){
+            if(contain<1>(pattern::pattern[1]))
+                blackStep=1;
+            if(contain<2>(pattern::pattern[0]))
+                whiteStep=0;
+        }else{
+            if(contain<1>(pattern::pattern[0]))
+                blackStep=0;
+            if(contain<2>(pattern::pattern[1]))
+                whiteStep=1;
+        }
+        if(blackStep<whiteStep)
             return 1;
-        if(win<2>())
+        if(whiteStep<blackStep)
             return 3;
-        if(draw())
+        if(c[0]+c[1]==225)
             return 2;
         return 0;
     }
-    template<int n>bool win(){
+    template<int n>bool contain(pattern::PatternLevel&pl){
+        for(auto&p:pl)
         for(int i=0;i<15;i++)
         for(int j=0;j<15;j++){
-            bool b=i+4<15,c=j+4<15,d=i+4<15&&j+4<15,e=d;
-            for(int k=0;k<5;k++){
-                if(b&&a[i+k][j]!=n)
-                    b=0;
-                if(c&&a[i][j+k]!=n)
-                    c=0;
-                if(d&&a[i+k][j+k]!=n)
-                    d=0;
-                if(e&&a[i+k][j+(4-k)]!=n)
-                    e=0;
-            }
-            if(b||c||d||e)
+            bool b=0;
+            for(auto&pe:p)
+            if(!(
+                0<=i+pe.x&&i+pe.x<15&&
+                0<=j+pe.y&&j+pe.y<15&&
+                a[i+pe.x][j+pe.y]==(pe.state?n:0)
+            ))
+                b=1;
+            if(!b)
                 return 1;
         }
         return 0;
-    }
-    bool draw(){
-        for(int i=0;i<15;i++)
-        for(int j=0;j<15;j++)
-        if(!a[i][j])
-            return 0;
-        return 1;
     }
 };
 istream&operator>>(istream&stream,Board&board){
@@ -78,7 +87,9 @@ ostream&operator<<(ostream&stream,Score score){
     stream<<"}\n";
     return stream;
 }
+int boardSeen;
 Score Board::score(int t=1024){
+    boardSeen++;
     int black=0,white=0;
     for(int i=0;i<15;i++)
     for(int j=0;j<15;j++)
@@ -124,11 +135,11 @@ void syntaxOutputPattern(ostream&s,pattern::Pattern&p){
     s<<'\n';
 }
 int main(){
-    /*cout<<"calculating pattern\n";
+    cout<<"calculating pattern\n";
     pattern::patternDeduct(1);
-    pattern::patternDeduct(2);
-    pattern::patternDeduct(3);
-    cout<<"compeleted calculating pattern\n";*/
+    /*pattern::patternDeduct(2);
+    pattern::patternDeduct(3);*/
+    cout<<"compeleted calculating pattern\n";
     /*cout<<pattern::pattern[3].size()<<endl;
     for(auto&p:pattern::pattern[3])
         pattern::visualOutput(cout,p);*/
@@ -136,4 +147,5 @@ int main(){
     Board b;
     cin>>b;
     cout<<b.score();
+    cout<<boardSeen<<'\n';
 }
