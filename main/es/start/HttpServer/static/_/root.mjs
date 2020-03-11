@@ -26,7 +26,7 @@ doe.head(doe.style(`
 `))
 let sandbox=doe.div(
     doe.canvas(
-        {width:640,height:640}
+        {width:480,height:480}
     )
 )
 doe.body(
@@ -35,7 +35,7 @@ doe.body(
         sandbox,
         doe.div(
             {className:'bottom'},
-            doe.a({href:'https://anliting.com/'},'An-Li Ting')
+            doe.a({href:'https://anliting.com/'},'丁安立')
         )
     )
 )
