@@ -8,11 +8,12 @@ async function root(stream){
         doc.content=(async()=>
         `<!doctype html>
 <title>五子棋</title>
-<body>
-<script type=module>
-${await link(`${this._mainDir}/start/HttpServer/static/_/root.mjs`)}
-</script>
-`
+<body>${
+    `<script type=module src=/_/root.mjs></script>`
+    /*`<script type=module>${
+        await link(`${this._mainDir}/start/HttpServer/static/_/root.mjs`)
+    }</script>`*/
+}`
     )()
     let content=await doc.content
     if(stream.closed)
