@@ -66,18 +66,32 @@ async function load(){
             await this._ipcServer.listen()
         })(),
         (async()=>{
-            this._httpServer=new HttpServer(this._mainDir,wsListen)
-            this._wsServer=new WsServer
+            this._tls=1
+            try{
+                await fs.promises.stat('tls')
+            }catch(e){
+                if(!(e.code=='ENOENT'))
+                    throw e
+                this._tls=0
+            }
+            this._httpServer=new HttpServer(
+                this._mainDir,
+                wsListen,
+                this._tls
+            )
+            this._wsServer=new WsServer(this._tls)
             this._wsServer.out={
                 putSession:putSession.bind(this),
                 cutSession:session=>{
                     this._session.delete(session)
                 },
             }
-            this._interval=setInterval(async()=>{
-                this._loadTls()
-            },86400e3)
-            await this._loadTls()
+            if(this._tls){
+                this._interval=setInterval(async()=>{
+                    this._loadTls()
+                },86400e3)
+                await this._loadTls()
+            }
             await this._wsServer.listen(wsListen)
             await this._httpServer.listen(httpListen)
         })(),
@@ -97,7 +111,8 @@ Server.prototype._loadTls=async function(){
 }
 Server.prototype.end=async function(){
     await this._load
-    clearInterval(this._interval)
+    if(this._tls)
+        clearInterval(this._interval)
     await Promise.all([
         this._ipcServer.end(),
         (async()=>{

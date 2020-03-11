@@ -2,13 +2,17 @@ import http2 from           'http2'
 import urlModule from       'url'
 import dynamic from         './HttpServer/dynamic.mjs'
 import staticResponse from  './HttpServer/static.mjs'
-function HttpServer(mainDir,wsListen){
+function HttpServer(mainDir,wsListen,tls){
     this._mainDir=mainDir
     this._wsListen=wsListen
     this._session=new Set
-    this._server=http2.createSecureServer().on('secureConnection',socket=>{
-        socket.on('error',()=>{})
-    }).on('session',session=>{
+    this._server=(tls?
+        http2.createSecureServer().on('secureConnection',socket=>{
+            socket.on('error',()=>{})
+        }).on('tlsClientError',()=>{})
+    :
+        http2.createServer()
+    ).on('session',session=>{
         this._session.add(session)
         session.on('close',()=>
             this._session.delete(session)
@@ -49,7 +53,7 @@ function HttpServer(mainDir,wsListen){
             stream.respond({':status':400})
             stream.end()
         }
-    }).on('tlsClientError',()=>{})
+    })
 }
 HttpServer.prototype.setSecureContext=function(secureContext){
     this._server.setSecureContext(secureContext)

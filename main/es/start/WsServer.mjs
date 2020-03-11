@@ -1,4 +1,5 @@
 import fs from'fs'
+import http from'http'
 import https from'https'
 import ws from'ws'
 import onMessage from'./WsServer/onMessage.mjs'
@@ -7,11 +8,14 @@ function syncLoggedOut(connection){
     buf.writeUInt8(1)
     connection.send(buf) 
 }
-function WsServer(){
+function WsServer(tls){
     this._connectionMap=new Map
-    this._httpsServer=https.createServer().on('secureConnection',socket=>{
-        socket.on('error',()=>{})
-    }).on('tlsClientError',()=>{})
+    this._httpsServer=tls?
+        https.createServer().on('secureConnection',socket=>{
+            socket.on('error',()=>{})
+        }).on('tlsClientError',()=>{})
+    :
+        http.createServer()
     this._wssServer=new ws.Server({
         server:this._httpsServer,
     }).on('connection',connection=>{
