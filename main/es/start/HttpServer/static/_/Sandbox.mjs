@@ -60,8 +60,13 @@ Peice.prototype.highlight=function(){
 }
 Peice.prototype.unhighlight=function(){
     let context=this.node.getContext('2d')
-    context.clearRect(0,0,32,32)
+    context.clearRect(0,0,34,34)
     drawPeice.call(this,context)
+}
+function setObject(object){
+    this._ui[this._status.object].unhighlight()
+    this._status.object=object
+    this._ui[this._status.object].highlight()
 }
 function Sandbox(){
     this._status={
@@ -73,21 +78,25 @@ function Sandbox(){
         for(let j=0;j<15;j++)
             this._status.board[i][j]=0
     }
-    let black=new Peice('black'),white=new Peice('white')
-    black.node.onclick=e=>{
-        black.highlight()
+    this._ui={
+        black:new Peice('black'),
+        white:new Peice('white'),
     }
-    white.node.onclick=e=>{
-        white.highlight()
+    this._ui.black.highlight()
+    this._ui.black.node.onclick=e=>{
+        setObject.call(this,'black')
+    }
+    this._ui.white.node.onclick=e=>{
+        setObject.call(this,'white')
     }
     let canvas
     this.node=doe.div(
         {className:'sandbox'},
         doe.div(
             {className:'left'},
-            black.node,
+            this._ui.black.node,
             ' ',
-            white.node
+            this._ui.white.node
         ),
         canvas=doe.canvas(
             {width:450,height:450}
