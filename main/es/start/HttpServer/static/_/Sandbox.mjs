@@ -29,6 +29,40 @@ function getCoordinate(e){
     )
         return[x,y]
 }
+function drawPeice(context){
+    context.fillStyle=this._color=='black'?
+        'rgba(0,0,0,1)'
+    :
+        'rgba(255,255,255,1)'
+    context.beginPath();
+    context.arc(17,17,15,0,2*Math.PI)
+    context.fill()
+}
+function drawHighlight(context){
+    context.strokeStyle='#3bf'
+    context.lineWidth=2
+    context.beginPath();
+    context.arc(17,17,16,0,2*Math.PI)
+    context.closePath();
+    context.stroke()
+}
+function Peice(color){
+    this._color=color
+    this.node=doe.canvas({width:34,height:34})
+    let context=this.node.getContext('2d')
+    drawPeice.call(this,context)
+}
+Peice.prototype.highlight=function(){
+    let context=this.node.getContext('2d')
+    context.clearRect(0,0,34,34)
+    drawPeice.call(this,context)
+    drawHighlight.call(this,context)
+}
+Peice.prototype.unhighlight=function(){
+    let context=this.node.getContext('2d')
+    context.clearRect(0,0,32,32)
+    drawPeice.call(this,context)
+}
 function Sandbox(){
     this._status={
         board:{},
@@ -39,9 +73,22 @@ function Sandbox(){
         for(let j=0;j<15;j++)
             this._status.board[i][j]=0
     }
+    let black=new Peice('black'),white=new Peice('white')
+    black.node.onclick=e=>{
+        black.highlight()
+    }
+    white.node.onclick=e=>{
+        white.highlight()
+    }
     let canvas
     this.node=doe.div(
         {className:'sandbox'},
+        doe.div(
+            {className:'left'},
+            black.node,
+            ' ',
+            white.node
+        ),
         canvas=doe.canvas(
             {width:450,height:450}
         )
@@ -77,6 +124,19 @@ function Sandbox(){
 Sandbox.style=`
     .sandbox{
         display:inline-block;
+        position:relative;
+        width:850px;
+        height:450px;
+    }
+    .sandbox>.left{
+        position:absolute;
+        left:0;
+        width:200px;
+        padding-top:40px;
+    }
+    .sandbox>canvas{
+        position:absolute;
+        left:200px;
     }
 `
 export default Sandbox
