@@ -34,7 +34,13 @@ doe.body(
         sandbox.node,
         doe.div(
             {className:'bottom'},
-            doe.a({href:'https://anliting.com/'},'丁安立')
+            doe.a(
+                {
+                    title:'2020-03-12',
+                    href:'https://anliting.com/'
+                },
+                '丁安立'
+            ),
         )
     )
 )
