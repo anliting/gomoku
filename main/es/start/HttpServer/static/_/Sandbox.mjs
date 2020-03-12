@@ -3,17 +3,10 @@ function drawBoard(context){
     context.lineWidth=2
     context.fillStyle='#888'
     context.fillRect(0,0,450,450)
+    context.fillStyle='#000'
     for(let i=0;i<15;i++){
-        context.beginPath()
-        context.moveTo(i*30+15,15-1)
-        context.lineTo(i*30+15,14*30+15+1)
-        context.closePath()
-        context.stroke()
-        context.beginPath()
-        context.moveTo(15-1,i*30+15)
-        context.lineTo(14*30+15+1,i*30+15)
-        context.closePath()
-        context.stroke()
+        context.fillRect(i*30+15-1,15-1,2,30*14+2)
+        context.fillRect(15-1,i*30+15-1,30*14+2,2)
     }
     for(let x=0;x<15;x++)
     for(let y=0;y<15;y++)
