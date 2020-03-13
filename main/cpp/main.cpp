@@ -88,7 +88,7 @@ ostream&operator<<(ostream&stream,Score score){
     return stream;
 }
 int boardSeen;
-Score Board::score(int t=1024){
+Score Board::score(int t=128){
     boardSeen++;
     int black=0,white=0;
     for(int i=0;i<15;i++)
