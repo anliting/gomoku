@@ -135,17 +135,17 @@ void syntaxOutputPattern(ostream&s,pattern::Pattern&p){
     s<<'\n';
 }
 int main(){
-    /*cout<<"calculating pattern\n";
+    cout<<"calculating pattern\n";
     pattern::patternDeduct(1);
-    pattern::patternDeduct(2);
-    pattern::patternDeduct(3);
+    /*pattern::patternDeduct(2);
+    pattern::patternDeduct(3);*/
     cout<<"compeleted calculating pattern\n";
-    cout<<pattern::pattern[3].size()<<endl;
+    /*cout<<pattern::pattern[3].size()<<endl;
     for(auto&p:pattern::pattern[3])
-        pattern::visualOutput(cout,p);
+        pattern::visualOutput(cout,p);*/
     srand(time(0));
     Board b;
     cin>>b;
     cout<<b.score();
-    cout<<boardSeen<<'\n';*/
+    cout<<boardSeen<<'\n';
 }
