@@ -5,12 +5,20 @@
 #include<vector>
 #include"main/pattern.cpp"
 using namespace std;
-struct Score{
-    float black,draw,white;
+struct Play{
+    int x,y;
 };
 struct Board{
     char a[15][15];
-    Score score(int t);
+    Play play();
+    vector<int>count(){
+        vector<int>x(2,0);
+        for(int i=0;i<15;i++)
+        for(int j=0;j<15;j++)
+        if(a[i][j])
+            x[a[i][j]-1]++;
+        return x;
+    }
     int calcState(){
         int c[2]{};
         for(int i=0;i<15;i++)
@@ -21,14 +29,14 @@ struct Board{
         int blackStep=225,whiteStep=225;
         if(blackFirst){
             if(contain<1>(pattern::pattern[1]))
-                blackStep=1;
+                blackStep=min(blackStep,1);
             if(contain<2>(pattern::pattern[0]))
-                whiteStep=0;
+                whiteStep=min(whiteStep,0);
         }else{
             if(contain<1>(pattern::pattern[0]))
-                blackStep=0;
+                blackStep=min(blackStep,0);
             if(contain<2>(pattern::pattern[1]))
-                whiteStep=1;
+                whiteStep=min(whiteStep,1);
         }
         if(blackStep<whiteStep)
             return 1;
@@ -36,6 +44,35 @@ struct Board{
             return 3;
         if(c[0]+c[1]==225)
             return 2;
+        return 0;
+    }
+    int calcStateRecursively(int turn,int d=0){
+        int state=calcState();
+        if(state)
+            return state;
+        bool unknown=0,draw=0,lose=0;
+        if(d<1)
+        for(int i=0;i<15;i++)
+        for(int j=0;j<15;j++)
+        if(a[i][j]==0){
+            a[i][j]=turn+1;
+            int state=calcStateRecursively(!turn,d+1);
+            a[i][j]=0;
+            if(state==(turn==0?1:3))
+                return state;
+            if(state==0)
+                unknown=1;
+            if(state==2)
+                draw=1;
+            if(state==(turn==0?3:1))
+                lose=1;
+        }
+        if(unknown)
+            return 0;
+        if(draw)
+            return 2;
+        if(lose)
+            return(turn==0?3:1);
         return 0;
     }
     template<int n>bool contain(pattern::PatternLevel&pl){
@@ -77,53 +114,22 @@ ostream&operator<<(ostream&stream,Board board){
     stream<<'\n';
     return stream;
 }
-ostream&operator<<(ostream&stream,Score score){
-    stream.precision(2);
-    stream<<fixed;
-    stream<<"{\n";
-    stream<<"    black: "<<score.black<<",\n";
-    stream<<"    draw:  "<<score.draw<<",\n";
-    stream<<"    white: "<<score.white<<"\n";
-    stream<<"}\n";
-    return stream;
-}
-int boardSeen;
-Score Board::score(int t=128){
-    boardSeen++;
-    int black=0,white=0;
+Play Board::play(){
+    auto count=Board::count();
+    int turn=count[0]==count[1]?0:1;
     for(int i=0;i<15;i++)
     for(int j=0;j<15;j++)
-        if(a[i][j]==1)
-            black++;
-        else if(a[i][j]==2)
-            white++;
-    int state=calcState();
-    if(state==1)
-        return{1,0,0};
-    if(state==2)
-        return{0,1,0};
-    if(state==3)
-        return{0,0,1};
-    Score s{0,0,0};
-    for(int k=0;k<t;k++){
-        int c=rand()%(15*15-(black+white)),d=0;
-        for(int i=0;i<15;i++)
-        for(int j=0;j<15;j++)
-        if(!a[i][j]&&d++==c){
-            a[i][j]=black==white?1:2;
-            Score t=score(1);
-            s.black+=t.black;
-            s.draw+=t.draw;
-            s.white+=t.white;
-            a[i][j]=0;
-            i=14;
-            j=14;
-        }
+    if(!a[i][j]){
+        a[i][j]=turn+1;
+        int state=calcStateRecursively(!turn);
+        a[i][j]=0;
+        if(state==(turn==0?1:3))
+            return{i,j};
     }
-    s.black/=t;
-    s.draw/=t;
-    s.white/=t;
-    return s;
+    for(int i=0;i<15;i++)
+    for(int j=0;j<15;j++)
+    if(!a[i][j])
+        return{i,j};
 }
 void syntaxOutputPattern(ostream&s,pattern::Pattern&p){
     for(int j=0;j<p.size();j++)
@@ -135,17 +141,17 @@ void syntaxOutputPattern(ostream&s,pattern::Pattern&p){
     s<<'\n';
 }
 int main(){
-    cout<<"calculating pattern\n";
+    //cout<<"calculating pattern\n";
     pattern::patternDeduct(1);
     /*pattern::patternDeduct(2);
-    pattern::patternDeduct(3);*/
+    pattern::patternDeduct(3);
     cout<<"compeleted calculating pattern\n";
-    /*cout<<pattern::pattern[3].size()<<endl;
+    cout<<pattern::pattern[3].size()<<endl;
     for(auto&p:pattern::pattern[3])
         pattern::visualOutput(cout,p);*/
     srand(time(0));
     Board b;
     cin>>b;
-    cout<<b.score();
-    cout<<boardSeen<<'\n';
+    Play p=b.play();
+    cout<<p.x<<' '<<p.y<<'\n';
 }

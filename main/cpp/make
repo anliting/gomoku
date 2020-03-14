@@ -1,1 +1,1 @@
-g++ -std=c++17 gomoku/main/cpp/main.cpp
+g++ -pedantic -std=c++17 -w -x c++ gomoku/main/cpp/main.cpp
