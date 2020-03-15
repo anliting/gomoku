@@ -19,6 +19,18 @@ function drawBoard(context){
         context.arc(30*x+15,30*y+15,15,0,2*Math.PI)
         context.fill()
     }
+    if(this._status.cursor){
+        let[x,y]=this._status.cursor
+        if(!this._status.board[x][y]){
+            context.fillStyle=this._status.object=='black'?
+                'rgba(0,0,0,.5)'
+            :
+                'rgba(255,255,255,.5)'
+            context.beginPath();
+            context.arc(30*x+15,30*y+15,15,0,2*Math.PI)
+            context.fill()
+        }
+    }
 }
 function getCoordinate(e){
     let
@@ -71,6 +83,7 @@ function setObject(object){
 function Sandbox(){
     this._status={
         board:{},
+        cursor:0,
         object:'black',
     }
     for(let i=0;i<15;i++){
@@ -105,20 +118,11 @@ function Sandbox(){
     let context=canvas.getContext('2d')
     drawBoard.call(this,context)
     canvas.onmousemove=e=>{
+        this._status.cursor=getCoordinate(e)
         drawBoard.call(this,context)
-        let coordinate
-        if(coordinate=getCoordinate(e)){
-            let[x,y]=coordinate
-            context.fillStyle=this._status.object=='black'?
-                'rgba(0,0,0,.5)'
-            :
-                'rgba(255,255,255,.5)'
-            context.beginPath();
-            context.arc(30*x+15,30*y+15,15,0,2*Math.PI)
-            context.fill()
-        }
     }
     canvas.onmouseleave=e=>{
+        this._status.cursor=0
         drawBoard.call(this,context)
     }
     canvas.onclick=e=>{
