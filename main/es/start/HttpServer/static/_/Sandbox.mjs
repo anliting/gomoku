@@ -2,6 +2,7 @@ import doe from         './lib/doe/main/doe.mjs'
 import load from        './load.mjs'
 import style from       './Sandbox/style.mjs'
 import element from     './Sandbox/element.mjs'
+import Peice from       './Sandbox/Peice.mjs'
 function drawBoard(context){
     context.lineWidth=2
     context.fillStyle='#888'
@@ -43,37 +44,6 @@ function getCoordinate(e){
         (xr-15)**2+(yr-15)**2<=15**2
     )
         return[x,y]
-}
-function drawPeice(context){
-    context.fillStyle=element[this._color].color
-    context.beginPath()
-    context.arc(17,17,element[this._color].radius,0,2*Math.PI)
-    context.fill()
-}
-function drawHighlight(context){
-    context.strokeStyle='#3bf'
-    context.lineWidth=2
-    context.beginPath()
-    context.arc(17,17,element[this._color].radius+1,0,2*Math.PI)
-    context.closePath()
-    context.stroke()
-}
-function Peice(color){
-    this._color=color
-    this.node=doe.canvas({width:34,height:34})
-    let context=this.node.getContext('2d')
-    drawPeice.call(this,context)
-}
-Peice.prototype.highlight=function(){
-    let context=this.node.getContext('2d')
-    context.clearRect(0,0,34,34)
-    drawPeice.call(this,context)
-    drawHighlight.call(this,context)
-}
-Peice.prototype.unhighlight=function(){
-    let context=this.node.getContext('2d')
-    context.clearRect(0,0,34,34)
-    drawPeice.call(this,context)
 }
 function setObject(object){
     this._ui[this._status.object].unhighlight()
