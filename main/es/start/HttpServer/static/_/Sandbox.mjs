@@ -141,7 +141,8 @@ function Sandbox(){
         let coordinate
         if(coordinate=getCoordinate(e)){
             let[x,y]=coordinate
-            this._status.board[x][y]=this._status.object
+            if(!this._status.board[x][y])
+                this._status.board[x][y]=this._status.object
         }
         drawBoard.call(this,context)
     }
