@@ -2,9 +2,10 @@ import http2 from           'http2'
 import urlModule from       'url'
 import dynamic from         './HttpServer/dynamic.mjs'
 import staticResponse from  './HttpServer/static.mjs'
-function HttpServer(mainDir,wsListen,tls){
+function HttpServer(mainDir,wsListen,test,tls){
     this._mainDir=mainDir
     this._wsListen=wsListen
+    this._test=test
     this._session=new Set
     this._server=(tls?
         http2.createSecureServer().on('secureConnection',socket=>{

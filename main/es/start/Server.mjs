@@ -57,6 +57,14 @@ async function load(){
         readListen('httpListen'),
         readListen('wsListen'),
     ])
+    try{
+        await fs.promises.stat('test')
+        this._test=1
+    }catch(e){
+        if(!(e.code=='ENOENT'))
+            throw e
+        this._test=0
+    }
     await Promise.all([
         (async()=>{
             this._ipcServer=new IpcServer
@@ -77,6 +85,7 @@ async function load(){
             this._httpServer=new HttpServer(
                 this._mainDir,
                 wsListen,
+                this._test,
                 this._tls
             )
             this._wsServer=new WsServer(this._tls)

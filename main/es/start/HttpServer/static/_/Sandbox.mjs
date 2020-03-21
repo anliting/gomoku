@@ -126,6 +126,9 @@ function Sandbox(){
     )
     let context=canvas.getContext('2d')
     drawBoard.call(this,context)
+    canvas.oncontextmenu=e=>{
+        e.preventDefault()
+    }
     canvas.onmousemove=e=>{
         this._status.cursor=getCoordinate(e)
         drawBoard.call(this,context)
@@ -139,6 +142,16 @@ function Sandbox(){
         if(coordinate=getCoordinate(e)){
             let[x,y]=coordinate
             this._status.board[x][y]=this._status.object
+        }
+        drawBoard.call(this,context)
+    }
+    canvas.onauxclick=e=>{
+        if(!(e.button==2))
+            return
+        let coordinate
+        if(coordinate=getCoordinate(e)){
+            let[x,y]=coordinate
+            this._status.board[x][y]=0
         }
         drawBoard.call(this,context)
     }
