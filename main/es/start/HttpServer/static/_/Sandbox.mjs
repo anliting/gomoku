@@ -1,4 +1,5 @@
 import doe from         './lib/doe/main/doe.mjs'
+import load from        './load.mjs'
 function drawBoard(context){
     context.lineWidth=2
     context.fillStyle='#888'
@@ -113,7 +114,15 @@ function Sandbox(){
         ),
         canvas=doe.canvas(
             {width:450,height:450}
-        )
+        ),
+        doe.div(
+            {className:'right'},
+            doe.span({className:'click',onclick(){
+                canvas.toBlob(blob=>{
+                    load.download(URL.createObjectURL(blob),'board.png')
+                })
+            }},'Save as Image'),
+        ),
     )
     let context=canvas.getContext('2d')
     drawBoard.call(this,context)
@@ -141,6 +150,9 @@ Sandbox.style=`
         width:850px;
         height:450px;
     }
+    .sandbox .click{
+        cursor:pointer;
+    }
     .sandbox>.left{
         position:absolute;
         left:0;
@@ -150,6 +162,12 @@ Sandbox.style=`
     .sandbox>canvas{
         position:absolute;
         left:200px;
+    }
+    .sandbox>.right{
+        position:absolute;
+        left:650px;
+        width:200px;
+        padding-top:40px;
     }
 `
 export default Sandbox
