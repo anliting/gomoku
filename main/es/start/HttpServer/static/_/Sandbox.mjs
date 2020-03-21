@@ -119,9 +119,9 @@ function Sandbox(){
             {className:'right'},
             doe.span({className:'click',onclick(){
                 canvas.toBlob(blob=>{
-                    load.download(URL.createObjectURL(blob),'board.png')
+                    load.download(URL.createObjectURL(blob),'棋盤.png')
                 })
-            }},'Save as Image'),
+            }},'儲存為圖片'),
         ),
     )
     let context=canvas.getContext('2d')
