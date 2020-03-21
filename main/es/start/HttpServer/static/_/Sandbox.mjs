@@ -1,15 +1,7 @@
 import doe from         './lib/doe/main/doe.mjs'
 import load from        './load.mjs'
-let color={
-    black:'rgba(0,0,0,1)',
-    white:'rgba(255,255,255,1)',
-    placeholder:'rgba(136,136,136,1)',
-}
-let radius={
-    black:15,
-    white:15,
-    placeholder:10,
-}
+import style from       './Sandbox/style.mjs'
+import element from     './Sandbox/element.mjs'
 function drawBoard(context){
     context.lineWidth=2
     context.fillStyle='#888'
@@ -22,20 +14,22 @@ function drawBoard(context){
     for(let x=0;x<15;x++)
     for(let y=0;y<15;y++)
     if(this._status.board[x][y]){
-        context.fillStyle=color[this._status.board[x][y]]
+        context.fillStyle=element[this._status.board[x][y]].color
         context.beginPath()
         context.arc(
-            30*x+15,30*y+15,radius[this._status.board[x][y]],0,2*Math.PI
+            30*x+15,30*y+15,element[this._status.board[x][y]].radius,
+            0,2*Math.PI
         )
         context.fill()
     }
     if(this._status.cursor){
         let[x,y]=this._status.cursor
         if(!this._status.board[x][y]){
-            context.fillStyle=color[this._status.object]
+            context.fillStyle=element[this._status.object].color
             context.beginPath()
             context.arc(
-                30*x+15,30*y+15,radius[this._status.object],0,2*Math.PI
+                30*x+15,30*y+15,element[this._status.object].radius,
+                0,2*Math.PI
             )
             context.fill()
         }
@@ -51,16 +45,16 @@ function getCoordinate(e){
         return[x,y]
 }
 function drawPeice(context){
-    context.fillStyle=color[this._color]
+    context.fillStyle=element[this._color].color
     context.beginPath()
-    context.arc(17,17,radius[this._color],0,2*Math.PI)
+    context.arc(17,17,element[this._color].radius,0,2*Math.PI)
     context.fill()
 }
 function drawHighlight(context){
     context.strokeStyle='#3bf'
     context.lineWidth=2
     context.beginPath()
-    context.arc(17,17,radius[this._color]+1,0,2*Math.PI)
+    context.arc(17,17,element[this._color].radius+1,0,2*Math.PI)
     context.closePath()
     context.stroke()
 }
@@ -168,31 +162,5 @@ function Sandbox(){
         drawBoard.call(this,context)
     }
 }
-Sandbox.style=`
-    .sandbox{
-        display:inline-block;
-        position:relative;
-        width:850px;
-        height:450px;
-    }
-    .sandbox .click{
-        cursor:pointer;
-    }
-    .sandbox>.left{
-        position:absolute;
-        left:0;
-        width:200px;
-        padding-top:40px;
-    }
-    .sandbox>canvas{
-        position:absolute;
-        left:200px;
-    }
-    .sandbox>.right{
-        position:absolute;
-        left:650px;
-        width:200px;
-        padding-top:40px;
-    }
-`
+Sandbox.style=style
 export default Sandbox
