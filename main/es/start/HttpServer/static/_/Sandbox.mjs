@@ -1,5 +1,15 @@
 import doe from         './lib/doe/main/doe.mjs'
 import load from        './load.mjs'
+let color={
+    black:'rgba(0,0,0,1)',
+    white:'rgba(255,255,255,1)',
+    placeholder:'rgba(136,136,136,1)',
+}
+let radius={
+    black:15,
+    white:15,
+    placeholder:10,
+}
 function drawBoard(context){
     context.lineWidth=2
     context.fillStyle='#888'
@@ -12,23 +22,21 @@ function drawBoard(context){
     for(let x=0;x<15;x++)
     for(let y=0;y<15;y++)
     if(this._status.board[x][y]){
-        context.fillStyle=this._status.board[x][y]=='black'?
-            'rgba(0,0,0,1)'
-        :
-            'rgba(255,255,255,1)'
-        context.beginPath();
-        context.arc(30*x+15,30*y+15,15,0,2*Math.PI)
+        context.fillStyle=color[this._status.board[x][y]]
+        context.beginPath()
+        context.arc(
+            30*x+15,30*y+15,radius[this._status.board[x][y]],0,2*Math.PI
+        )
         context.fill()
     }
     if(this._status.cursor){
         let[x,y]=this._status.cursor
         if(!this._status.board[x][y]){
-            context.fillStyle=this._status.object=='black'?
-                'rgba(0,0,0,.5)'
-            :
-                'rgba(255,255,255,.5)'
-            context.beginPath();
-            context.arc(30*x+15,30*y+15,15,0,2*Math.PI)
+            context.fillStyle=color[this._status.object]
+            context.beginPath()
+            context.arc(
+                30*x+15,30*y+15,radius[this._status.object],0,2*Math.PI
+            )
             context.fill()
         }
     }
@@ -43,20 +51,17 @@ function getCoordinate(e){
         return[x,y]
 }
 function drawPeice(context){
-    context.fillStyle=this._color=='black'?
-        'rgba(0,0,0,1)'
-    :
-        'rgba(255,255,255,1)'
-    context.beginPath();
-    context.arc(17,17,15,0,2*Math.PI)
+    context.fillStyle=color[this._color]
+    context.beginPath()
+    context.arc(17,17,radius[this._color],0,2*Math.PI)
     context.fill()
 }
 function drawHighlight(context){
     context.strokeStyle='#3bf'
     context.lineWidth=2
-    context.beginPath();
-    context.arc(17,17,16,0,2*Math.PI)
-    context.closePath();
+    context.beginPath()
+    context.arc(17,17,radius[this._color]+1,0,2*Math.PI)
+    context.closePath()
     context.stroke()
 }
 function Peice(color){
@@ -95,6 +100,7 @@ function Sandbox(){
     this._ui={
         black:new Peice('black'),
         white:new Peice('white'),
+        placeholder:new Peice('placeholder'),
     }
     this._ui.black.highlight()
     this._ui.black.node.onclick=e=>{
@@ -103,6 +109,9 @@ function Sandbox(){
     this._ui.white.node.onclick=e=>{
         setObject.call(this,'white')
     }
+    this._ui.placeholder.node.onclick=e=>{
+        setObject.call(this,'placeholder')
+    }
     let canvas
     this.node=doe.div(
         {className:'sandbox'},
@@ -110,7 +119,9 @@ function Sandbox(){
             {className:'left'},
             this._ui.black.node,
             ' ',
-            this._ui.white.node
+            this._ui.white.node,
+            ' ',
+            this._ui.placeholder.node,
         ),
         canvas=doe.canvas(
             {width:450,height:450}
