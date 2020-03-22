@@ -25,8 +25,8 @@ function drawBoard(context){
     }
     if(this._status.cursor){
         let[x,y]=this._status.cursor
-        if(!this._status.board[x][y]){
-            context.fillStyle=element[this._status.object].color
+        if(this._status.object&&!this._status.board[x][y]){
+            context.fillStyle=element[this._status.object].transparentColor
             context.beginPath()
             context.arc(
                 30*x+15,30*y+15,element[this._status.object].radius,
@@ -45,8 +45,11 @@ function getCoordinate(e){
     )
         return[x,y]
 }
-function setObject(object){
-    this._ui[this._status.object].unhighlight()
+function clickObject(object){
+    if(this._status.object)
+        this._ui[this._status.object].unhighlight()
+    if(this._status.object==object)
+        return this._status.object=0
     this._status.object=object
     this._ui[this._status.object].highlight()
 }
@@ -54,7 +57,7 @@ function Sandbox(){
     this._status={
         board:{},
         cursor:0,
-        object:'black',
+        object:0,
     }
     for(let i=0;i<15;i++){
         this._status.board[i]={}
@@ -66,15 +69,15 @@ function Sandbox(){
         white:new Peice('white'),
         placeholder:new Peice('placeholder'),
     }
-    this._ui.black.highlight()
+    clickObject.call(this,'black')
     this._ui.black.node.onclick=e=>{
-        setObject.call(this,'black')
+        clickObject.call(this,'black')
     }
     this._ui.white.node.onclick=e=>{
-        setObject.call(this,'white')
+        clickObject.call(this,'white')
     }
     this._ui.placeholder.node.onclick=e=>{
-        setObject.call(this,'placeholder')
+        clickObject.call(this,'placeholder')
     }
     let canvas
     this.node=doe.div(
@@ -114,7 +117,7 @@ function Sandbox(){
     }
     canvas.onclick=e=>{
         let coordinate
-        if(coordinate=getCoordinate(e)){
+        if(this._status.object&&(coordinate=getCoordinate(e))){
             let[x,y]=coordinate
             if(!this._status.board[x][y])
                 this._status.board[x][y]=this._status.object
