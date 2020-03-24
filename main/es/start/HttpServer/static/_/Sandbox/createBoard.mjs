@@ -70,7 +70,7 @@ function createBoard(){
         }
     }
     canvas.onmouseleave=e=>{
-        this._status.mouseBoard=['out']
+        this._status.mouseBoard=0
         drawBoard.call(this,context)
     }
     canvas.onmousemove=e=>{
@@ -90,26 +90,30 @@ function createBoard(){
             }
     }
     canvas.onmouseup=e=>{
-        if(
-            this._status.mouseBoard[1]=='put'&&e.button==0&&
-            coordinateEqual(this._status.cursor,getCoordinate(e))
-        ){
-            let[x,y]=this._status.cursor
-            if(!this._status.board[x][y])
-                this._status.board[x][y]=this._status.object
-            mouseBoardEnterCursor.call(this,e)
-            drawBoard.call(this,context)
+        let change
+        if(this._status.mouseBoard[1]=='put'&&e.button==0){
+            if(coordinateEqual(this._status.cursor,getCoordinate(e))){
+                let[x,y]=this._status.cursor
+                if(!this._status.board[x][y])
+                    this._status.board[x][y]=this._status.object
+            }
+            this._status.mouseBoard[1]=0
+            change=1
         }
-        if(
-            this._status.mouseBoard[1]=='cut'&&e.button==2&&
-            coordinateEqual(this._status.cursor,getCoordinate(e))
-        ){
-            let[x,y]=this._status.cursor
-            this._status.board[x][y]=0
-            mouseBoardEnterCursor.call(this,e)
-            drawBoard.call(this,context)
+        if(this._status.mouseBoard[1]=='cut'&&e.button==2){
+            if(coordinateEqual(this._status.cursor,getCoordinate(e))){
+                let[x,y]=this._status.cursor
+                this._status.board[x][y]=0
+            }
+            this._status.mouseBoard[1]=0
+            change=1
         }
-        this._status.mouseBoard[1]=e.buttons?'null':'cursor'
+        if(!this._status.mouseBoard[1]&&!e.buttons){
+            mouseBoardEnterCursor.call(this,e)
+            change=1
+        }
+        if(change)
+            drawBoard.call(this,context)
     }
     return canvas
 }

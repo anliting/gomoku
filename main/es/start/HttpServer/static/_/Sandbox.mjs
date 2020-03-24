@@ -17,7 +17,7 @@ function Sandbox(){
         board:{},
         cursor:0,
         object:0,
-        mouseBoard:['out'],
+        mouseBoard:[],
     }
     for(let i=0;i<15;i++){
         this._status.board[i]={}
