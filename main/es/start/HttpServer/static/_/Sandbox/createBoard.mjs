@@ -83,6 +83,11 @@ function createBoard(){
         if(this._status.mouseBoard[1]=='cursor')
             if(e.button==0){
                 this._status.mouseBoard[1]='put'
+                if(this._status.cursor){
+                    let[x,y]=this._status.cursor
+                    if(this._status.board[x][y])
+                        this._status.mouseBoard[1]='text'
+                }
                 drawBoard.call(this,context)
             }else if(e.button==2){
                 this._status.mouseBoard[1]='cut'
@@ -108,6 +113,13 @@ function createBoard(){
             this._status.mouseBoard[1]=0
             change=1
         }
+        if(this._status.mouseBoard[1]=='text'&&e.button==0){
+            if(coordinateEqual(this._status.cursor,getCoordinate(e))){
+                console.log('text')
+            }
+            this._status.mouseBoard[1]=0
+            change=1
+        }
         if(!this._status.mouseBoard[1]&&!e.buttons){
             mouseBoardEnterCursor.call(this,e)
             change=1
@@ -115,6 +127,6 @@ function createBoard(){
         if(change)
             drawBoard.call(this,context)
     }
-    return canvas
+    return doe.div({className:'board'},canvas)
 }
 export default createBoard

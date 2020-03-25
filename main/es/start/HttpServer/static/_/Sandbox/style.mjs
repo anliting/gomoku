@@ -14,9 +14,10 @@ export default`
         width:200px;
         padding-top:40px;
     }
-    .sandbox>canvas{
+    .sandbox>.board{
         position:absolute;
         left:200px;
+        line-height:0;
     }
     .sandbox>.right{
         position:absolute;
