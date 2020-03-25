@@ -19,6 +19,9 @@ export default`
         left:200px;
         line-height:0;
     }
+    .sandbox>.board>.input{
+        position:absolute;
+    }
     .sandbox>.right{
         position:absolute;
         left:650px;

@@ -54,8 +54,11 @@ function mouseBoardEnterCursor(e){
     this._status.cursor=getCoordinate(e)
 }
 function createBoard(){
-    let canvas=doe.canvas(
-        {width:450,height:450}
+    let div,canvas
+    div=doe.div({className:'board'},
+        canvas=doe.canvas(
+            {width:450,height:450}
+        )
     )
     let context=canvas.getContext('2d')
     drawBoard.call(this,context)
@@ -115,7 +118,27 @@ function createBoard(){
         }
         if(this._status.mouseBoard[1]=='text'&&e.button==0){
             if(coordinateEqual(this._status.cursor,getCoordinate(e))){
-                console.log('text')
+                let input
+                let f=()=>{
+                    doe(div,1,input)
+                }
+                doe(div,
+                    input=doe.input({
+                        className:'input',
+                        onblur(){
+                            f()
+                        },
+                        onkeydown(e){
+                            if(e.key=='Enter')
+                                f()
+                        },
+                    },n=>{doe(n.style,{
+                        left:0,
+                        top:0,
+                    })})
+                )
+                input.focus()
+                //f()
             }
             this._status.mouseBoard[1]=0
             change=1
@@ -127,6 +150,6 @@ function createBoard(){
         if(change)
             drawBoard.call(this,context)
     }
-    return doe.div({className:'board'},canvas)
+    return div
 }
 export default createBoard
