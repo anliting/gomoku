@@ -83,9 +83,6 @@ function createBoard(){
         this._status.cursor=getCoordinate(e)
         drawBoard.call(this,context)
     }
-setInterval(()=>
-    console.log(this._status.mouseBoard)
-,1e3)
     canvas.onmousedown=e=>{
         if(this._status.mouseBoard[1]=='cursor')
             if(e.button==0){
