@@ -19,6 +19,13 @@ function drawBoard(context){
             0,2*Math.PI
         )
         context.fill()
+        if(this._status.board[x][y][1]){
+            context.fillStyle=element[this._status.board[x][y][0]].textColor
+            context.font=`15px sans-serif`
+            context.textAlign='center'
+            context.textBaseline='middle'
+            context.fillText(this._status.board[x][y][1],30*x+15,30*y+15)
+        }
     }
     if(this._status.mouseBoard[0]=='in'){
         let cursor
@@ -172,9 +179,3 @@ function createBoard(){
     return div
 }
 export default createBoard
-/*
-['in',{
-    listen:always
-    cursor:
-}]
-*/
