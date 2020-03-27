@@ -12,18 +12,23 @@ function clickObject(object){
     this._status.object=object
     this._ui[this._status.object].highlight()
 }
+function createBoardStatus(){
+    let a={}
+    for(let i=0;i<15;i++){
+        a[i]={}
+        for(let j=0;j<15;j++)
+            a[i][j]=0
+    }
+    return a
+}
 function Sandbox(){
     this._status={
-        board:{},
+        board:createBoardStatus(),
         cursor:0,
         object:0,
         mouseBoard:[],
     }
-    for(let i=0;i<15;i++){
-        this._status.board[i]={}
-        for(let j=0;j<15;j++)
-            this._status.board[i][j]=0
-    }
+    this._do={}
     this._ui={
         black:new Peice('black'),
         white:new Peice('white'),

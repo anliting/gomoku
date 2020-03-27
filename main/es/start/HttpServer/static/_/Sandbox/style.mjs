@@ -21,6 +21,17 @@ export default`
     }
     .sandbox>.board>.input{
         position:absolute;
+        border:unset;
+        padding:0;
+        margin:0;
+        width:30px;
+        height:30px;
+        text-align:center;
+        line-height:30px;
+        vertical-align:middle;
+        background-color:unset;
+        font-size:15px;
+        resize:none;
     }
     .sandbox>.right{
         position:absolute;

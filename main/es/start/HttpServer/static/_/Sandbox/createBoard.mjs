@@ -1,6 +1,7 @@
 import doe from         '../lib/doe/main/doe.mjs'
 import element from     './element.mjs'
-function drawBoard(context){
+function drawBoard(){
+    let context=this._do.boardCanvasContext
     context.lineWidth=2
     context.fillStyle='#888'
     context.fillRect(0,0,450,450)
@@ -20,7 +21,8 @@ function drawBoard(context){
         )
         context.fill()
         if(this._status.board[x][y][1]){
-            context.fillStyle=element[this._status.board[x][y][0]].textColor
+            context.fillStyle=
+                element[this._status.board[x][y][0]].textColor
             context.font=`15px sans-serif`
             context.textAlign='center'
             context.textBaseline='middle'
@@ -36,7 +38,8 @@ function drawBoard(context){
         if(cursor){
             let[x,y]=cursor
             if(this._status.object&&!this._status.board[x][y]){
-                context.fillStyle=element[this._status.object].transparentColor
+                context.fillStyle=
+                    element[this._status.object].transparentColor
                 context.beginPath()
                 context.arc(
                     30*x+15,30*y+15,element[this._status.object].radius,
@@ -59,9 +62,6 @@ function getCoordinate(e){
 function coordinateEqual(a,b){
     return a&&b&&a[0]==b[0]&&a[1]==b[1]
 }
-function mouseBoardEnterCursor(e){
-    this._status.mouseBoard[1]='cursor'
-}
 function createBoard(){
     let div,canvas
     div=doe.div({className:'board'},
@@ -69,8 +69,8 @@ function createBoard(){
             {width:450,height:450}
         )
     )
-    let context=canvas.getContext('2d')
-    drawBoard.call(this,context)
+    this._do.boardCanvasContext=canvas.getContext('2d')
+    drawBoard.call(this)
     canvas.oncontextmenu=e=>{
         e.preventDefault()
     }
@@ -78,17 +78,17 @@ function createBoard(){
         this._status.mouseBoard=['in']
         this._status.cursor=getCoordinate(e)
         if(!this._status.text){
-            mouseBoardEnterCursor.call(this,e)
-            drawBoard.call(this,context)
+            this._status.mouseBoard[1]='cursor'
+            drawBoard.call(this)
         }
     }
     canvas.onmouseleave=e=>{
-        this._status.mouseBoard=0
-        drawBoard.call(this,context)
+        this._status.mouseBoard=[]
+        drawBoard.call(this)
     }
     canvas.onmousemove=e=>{
         this._status.cursor=getCoordinate(e)
-        drawBoard.call(this,context)
+        drawBoard.call(this)
     }
     canvas.onmousedown=e=>{
         if(this._status.mouseBoard[1]=='cursor')
@@ -100,11 +100,11 @@ function createBoard(){
                     if(this._status.board[x][y])
                         this._status.mouseBoard[1]='textClick'
                 }
-                drawBoard.call(this,context)
+                drawBoard.call(this)
             }else if(e.button==2){
                 this._status.previousCursor=this._status.cursor
                 this._status.mouseBoard[1]='cut'
-                drawBoard.call(this,context)
+                drawBoard.call(this)
             }
     }
     canvas.onmouseup=e=>{
@@ -118,7 +118,7 @@ function createBoard(){
                 if(!this._status.board[x][y])
                     this._status.board[x][y]=[this._status.object]
             }
-            this._status.mouseBoard[1]=0
+            this._status.mouseBoard.pop()
             change=1
         }
         if(this._status.mouseBoard[1]=='cut'&&e.button==2){
@@ -129,7 +129,7 @@ function createBoard(){
                 let[x,y]=this._status.cursor
                 this._status.board[x][y]=0
             }
-            this._status.mouseBoard[1]=0
+            this._status.mouseBoard.pop()
         }
         if(this._status.mouseBoard[1]=='textClick'&&e.button==0){
             if(coordinateEqual(
@@ -137,22 +137,22 @@ function createBoard(){
                 this._status.cursor
             )){
                 let[x,y]=this._status.cursor
-                this._status.mouseBoard[1]=0
+                this._status.mouseBoard.pop()
                 this._status.text=1
                 let input
                 let f=()=>{
                     this._status.text=0
                     this._status.board[x][y][1]=input.value
                     doe(div,1,input)
-                    this._status.mouseBoard[1]=0
-                    if(this._status.mouseBoard[0]=='in'){
-                        mouseBoardEnterCursor.call(this,e)
-                        drawBoard.call(this,context)
-                    }
+                    if(this._status.mouseBoard[0]=='in')
+                        this._status.mouseBoard[1]='cursor'
+                    drawBoard.call(this)
                 }
                 doe(div,
-                    input=doe.input({
+                    input=doe.textarea({
                         className:'input',
+                        maxLength:2,
+                        value:this._status.board[x][y][1]||'',
                         onblur(){
                             f()
                         },
@@ -161,20 +161,23 @@ function createBoard(){
                                 f()
                         },
                     },n=>{doe(n.style,{
-                        left:0,
-                        top:0,
-                    })})
+                        left:`${30*x}px`,
+                        top:`${30*y}px`,
+                        color:element[this._status.board[x][y][0]].
+                            textColor,
+                    })}),
                 )
+                this._status.board[x][y][1]=''
                 input.focus()
             }
-            this._status.mouseBoard[1]=0
+            this._status.mouseBoard.pop()
         }
         if(!this._status.mouseBoard[1]&&!this._status.text){
-            mouseBoardEnterCursor.call(this,e)
+            this._status.mouseBoard[1]='cursor'
             change=1
         }
         if(change)
-            drawBoard.call(this,context)
+            drawBoard.call(this)
     }
     return div
 }
