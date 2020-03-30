@@ -13,14 +13,20 @@ function createMouseDownMouseUp(){
         ))
             return
         if(e.button==0){
-            this._status.previousCursor=this._status.cursor
-            this._status.mouseBoard[1]='put'
             if(this._status.cursor){
-                let[x,y]=this._status.cursor
-                if(this._status.board[x][y])
+                let change,[x,y]=this._status.cursor
+                if(this._status.board[x][y]){
+                    this._status.previousCursor=this._status.cursor
                     this._status.mouseBoard[1]='textClick'
+                    change=1
+                }else if(this._status.object){
+                    this._status.previousCursor=this._status.cursor
+                    this._status.mouseBoard[1]='put'
+                    change=1
+                }
+                if(change)
+                    drawBoard.call(this)
             }
-            drawBoard.call(this)
         }else if(e.button==2){
             this._status.previousCursor=this._status.cursor
             this._status.mouseBoard[1]='cut'

@@ -30,7 +30,8 @@ function drawBoard(){
     }
     if(!(
         this._status.mouseBoard[0].active&&
-        this._status.mouseBoard[0].in
+        this._status.mouseBoard[0].in&&
+        this._status.object
     ))
         return
     let cursor

@@ -13,7 +13,6 @@ function clickObject(object){
         this._status.object=object
         this._ui[this._status.object].highlight()
     }
-    this._setPause()
 }
 function createBoardStatus(){
     let a={}
@@ -37,7 +36,7 @@ function Sandbox(){
         object:0,
         text:0,
         mouseBoard:[{
-            active:0,
+            active:1,
             in:0,
         }],
     }
@@ -71,7 +70,6 @@ function Sandbox(){
 }
 Sandbox.style=style
 Sandbox.prototype._setPause=function(){
-    this._status.mouseBoard[0].active=
-        this._status.object&&!this._status.text
+    this._status.mouseBoard[0].active=!this._status.text
 }
 export default Sandbox
