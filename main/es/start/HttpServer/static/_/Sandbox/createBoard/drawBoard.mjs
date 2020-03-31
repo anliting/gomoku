@@ -22,7 +22,7 @@ function drawBoard(){
         if(this._status.board[x][y][1]){
             context.fillStyle=
                 element[this._status.board[x][y][0]].textColor
-            context.font=`15px sans-serif`
+            context.font=`10px monospace`
             context.textAlign='center'
             context.textBaseline='middle'
             context.fillText(this._status.board[x][y][1],30*x+15,30*y+15)

@@ -79,7 +79,7 @@ function createMouseDownMouseUp(){
                 doe(this._do.board,
                     input=doe.textarea({
                         className:'input',
-                        maxLength:2,
+                        maxLength:3,
                         value:this._status.board[x][y][1]||'',
                         onblur(){
                             f()

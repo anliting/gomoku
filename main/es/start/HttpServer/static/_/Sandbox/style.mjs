@@ -30,8 +30,9 @@ export default`
         line-height:30px;
         vertical-align:middle;
         background-color:unset;
-        font-size:15px;
+        font-size:10px;
         resize:none;
+        font-family:monospace;
     }
     .sandbox>.right{
         position:absolute;
