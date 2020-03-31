@@ -1,6 +1,10 @@
-import element from     '../element.mjs'
+import element from     './element.mjs'
 function drawBoard(){
     let context=this._do.boardCanvasContext
+    context.setTransform(
+        this._status.devicePixelRatio,0,0,
+        this._status.devicePixelRatio,0,0
+    )
     context.lineWidth=2
     context.fillStyle='#888'
     context.fillRect(0,0,450,450)

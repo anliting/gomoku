@@ -4,6 +4,7 @@ export default`
         position:relative;
         width:850px;
         height:450px;
+        overflow:hidden;
     }
     .sandbox .click{
         cursor:pointer;
@@ -18,6 +19,9 @@ export default`
         position:absolute;
         left:200px;
         line-height:0;
+    }
+    .sandbox>.board>canvas{
+        transform-origin:top left;
     }
     .sandbox>.board>.input{
         position:absolute;

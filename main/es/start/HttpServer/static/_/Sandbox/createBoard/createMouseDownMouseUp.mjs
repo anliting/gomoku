@@ -1,6 +1,5 @@
 import doe from         '../../lib/doe/main/doe.mjs'
 import element from     '../element.mjs'
-import drawBoard from   './drawBoard.mjs'
 function coordinateEqual(a,b){
     return a&&b&&a[0]==b[0]&&a[1]==b[1]
 }
@@ -25,12 +24,12 @@ function createMouseDownMouseUp(){
                     change=1
                 }
                 if(change)
-                    drawBoard.call(this)
+                    this._drawBoard()
             }
         }else if(e.button==2){
             this._status.previousCursor=this._status.cursor
             this._status.mouseBoard[1]='cut'
-            drawBoard.call(this)
+            this._drawBoard()
         }
     }
     o.onmouseup=e=>{
@@ -74,7 +73,7 @@ function createMouseDownMouseUp(){
                     doe(this._do.board,1,input)
                     if(this._status.mouseBoard[0].in)
                         this._status.mouseBoard[1]='cursor'
-                    drawBoard.call(this)
+                    this._drawBoard()
                 }
                 doe(this._do.board,
                     input=doe.textarea({
@@ -102,7 +101,7 @@ function createMouseDownMouseUp(){
         }
         if(change){
             this._status.mouseBoard[1]='cursor'
-            drawBoard.call(this)
+            this._drawBoard()
         }
     }
     return o
