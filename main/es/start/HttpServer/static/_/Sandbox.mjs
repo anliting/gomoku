@@ -69,7 +69,6 @@ function Sandbox(){
             }},'儲存為圖片'),
         ),
     )
-    this.devicePixelRatio=1.5
 }
 Sandbox.style=style
 Sandbox.prototype._drawBoard=drawBoard
@@ -84,9 +83,7 @@ Sandbox.prototype._resizeBoardCanvas=function(){
         1/this._status.devicePixelRatio
     })`
 }
-Object.defineProperty(Sandbox.prototype,'devicePixelRatio',{get(){
-    return this._status.devicePixelRatio
-},set(v){
+Object.defineProperty(Sandbox.prototype,'devicePixelRatio',{set(v){
     this._status.devicePixelRatio=v
     this._resizeBoardCanvas()
 }})

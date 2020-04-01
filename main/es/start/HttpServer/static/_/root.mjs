@@ -44,9 +44,9 @@ doe.body(
         )
     )
 )
-let f=()=>{
+let dpr=1,f=()=>{
     requestAnimationFrame(f)
-    if(sandbox.devicePixelRatio!=devicePixelRatio)
-        sandbox.devicePixelRatio=devicePixelRatio
+    if(dpr!=devicePixelRatio)
+        sandbox.devicePixelRatio=dpr=devicePixelRatio
 }
 requestAnimationFrame(f)
