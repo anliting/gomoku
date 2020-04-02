@@ -1,9 +1,8 @@
 import element from     './element.mjs'
-function drawBoard(){
-    let context=this._do.boardCanvasContext
+function drawBoard(context,pr){
     context.setTransform(
-        this._status.devicePixelRatio,0,0,
-        this._status.devicePixelRatio,0,0
+        pr,0,0,
+        pr,0,0
     )
     context.lineWidth=2
     context.fillStyle='#888'
@@ -26,10 +25,15 @@ function drawBoard(){
         if(this._status.board[x][y][1]){
             context.fillStyle=
                 element[this._status.board[x][y][0]].textColor
-            context.font=`10px monospace`
+            context.font=`${
+                10*((3/this._status.board[x][y][1].length)**.5)
+            }px monospace`
             context.textAlign='center'
             context.textBaseline='middle'
-            context.fillText(this._status.board[x][y][1],30*x+15,30*y+15)
+            context.fillText(
+                this._status.board[x][y][1],30*x+15,30*y+15,
+                800**.5
+            )
         }
     }
     if(!(

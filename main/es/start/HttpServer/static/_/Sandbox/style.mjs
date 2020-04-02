@@ -13,7 +13,7 @@ export default`
         position:absolute;
         left:0;
         width:200px;
-        padding-top:40px;
+        padding-top:20px;
     }
     .sandbox>.board{
         position:absolute;
@@ -42,6 +42,9 @@ export default`
         position:absolute;
         left:650px;
         width:200px;
-        padding-top:40px;
+        padding-top:20px;
+    }
+    .sandbox>.right>.input{
+        width:30px;
     }
 `

@@ -49,6 +49,7 @@ function Sandbox(){
         placeholder:createPeice.call(this,'placeholder'),
     }
     clickObject.call(this,'black')
+    
     this.node=doe.div(
         {className:'sandbox'},
         doe.div(
@@ -62,16 +63,40 @@ function Sandbox(){
         createBoard.call(this),
         doe.div(
             {className:'right'},
-            doe.span({className:'click',onclick:_=>{
-                this._do.boardCanvas.toBlob(blob=>{
-                    load.download(URL.createObjectURL(blob),'棋盤.png')
-                })
-            }},'儲存為圖片'),
+            '比例：',
+            this._do.input=doe.input({
+                className:'input',
+                type:'number',
+                min:'1',
+                max:'8',
+                value:1,
+            }),
+            doe.div(
+                doe.span({className:'click',onclick:_=>{
+                    if(!this._do.input.validity.valid)
+                        return
+                    let pr=this._do.input.value
+                    let canvas=doe.canvas({
+                        width:450*pr,
+                        height:450*pr,
+                    })
+                    drawBoard.call(this,canvas.getContext('2d'),pr)
+                    canvas.toBlob(blob=>
+                        load.download(URL.createObjectURL(blob),'棋盤.png')
+                    )
+                }},'儲存為圖片'),
+            )
         ),
     )
 }
 Sandbox.style=style
-Sandbox.prototype._drawBoard=drawBoard
+Sandbox.prototype._drawBoard=function(){
+    drawBoard.call(
+        this,
+        this._do.boardCanvasContext,
+        this._status.devicePixelRatio
+    )
+}
 Sandbox.prototype._setPause=function(){
     this._status.mouseBoard[0].active=!this._status.text
 }

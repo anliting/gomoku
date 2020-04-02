@@ -22,6 +22,9 @@ doe.head(doe.style(`
             .05em .05em .05em rgba(0,0,0,.2);
         text-align:center;
     }
+    #main>.sandbox{
+        text-align:left;
+    }
     #main>.bottom{
         text-align:right;
     }
@@ -35,11 +38,8 @@ doe.body(
         doe.div(
             {className:'bottom'},
             doe.a(
-                {
-                    title:'2020-04-01',
-                    href:'https://anliting.com/'
-                },
-                '丁安立'
+                {href:'https://anliting.com/'},
+                '丁安立 2020-04-03 沙盤'
             ),
         )
     )
