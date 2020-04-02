@@ -15,16 +15,34 @@ function drawBoard(context,pr){
     for(let x=0;x<15;x++)
     for(let y=0;y<15;y++)
     if(this._status.board[x][y]){
-        context.fillStyle=element[this._status.board[x][y][0]].color
+        let key=this._status.board[x][y][0]
+        let c=element[key].color
+        context.fillStyle=c
         context.beginPath()
         context.arc(
-            30*x+15,30*y+15,element[this._status.board[x][y][0]].radius,
+            30*x+15,30*y+15,element[key].radius,
             0,2*Math.PI
         )
         context.fill()
+        if(key=='placeholder'){
+            context.setLineDash([
+                14.5*2*Math.PI/11*(1/2),
+                14.5*2*Math.PI/11*(1/2),
+            ])
+            context.lineWidth=1
+            context.strokeStyle='#000'
+            context.beginPath()
+            context.arc(
+                30*x+15,30*y+15,
+                element[key].radius-.5,
+                0,2*Math.PI
+            )
+            context.closePath()
+            context.stroke()
+        }
         if(this._status.board[x][y][1]){
             context.fillStyle=
-                element[this._status.board[x][y][0]].textColor
+                element[key].textColor
             context.font=`${
                 10*((3/this._status.board[x][y][1].length)**.5)
             }px monospace`

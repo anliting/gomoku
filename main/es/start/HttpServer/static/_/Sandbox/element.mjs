@@ -12,7 +12,7 @@ export default{
         textColor:'rgba(0,0,0,1)',
     },
     placeholder:{
-        radius:10,
+        radius:15,
         color:'rgba(136,136,136,1)',
         transparentColor:'rgba(136,136,136,.8)',
         textColor:'rgba(0,0,0,1)',
