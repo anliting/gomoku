@@ -63,13 +63,13 @@ function Sandbox(){
         createBoard.call(this),
         doe.div(
             {className:'right'},
-            '比例：',
+            '比例（1-8）：',
             this._do.input=doe.input({
                 className:'input',
                 type:'number',
                 min:'1',
                 max:'8',
-                value:1,
+                value:8,
             }),
             doe.div(
                 doe.span({className:'click',onclick:_=>{
