@@ -49,7 +49,6 @@ function Sandbox(){
         placeholder:createPeice.call(this,'placeholder'),
     }
     clickObject.call(this,'black')
-    
     this.node=doe.div(
         {className:'sandbox'},
         doe.div(
