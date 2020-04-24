@@ -9,7 +9,7 @@ doe.head(doe.style(`
         background-color:#888;
         font-family:sans-serif;
         font-size:16px;
-        line-height:1.2em;
+        line-height:1.2;
     }
     a{
         color:unset;
